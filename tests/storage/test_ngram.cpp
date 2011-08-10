@@ -29,8 +29,8 @@ int main(int argc, char * argv[]){
     range.m_range_begin = 0; range.m_range_end = 8;
     single_gram.search(&range,array);
     for ( size_t i = 0; i < array->len; ++i){
-	BigramPhraseItem * item = &g_array_index(array, BigramPhraseItem, i);
-	printf("item:%d:%f\n", item->m_token, item->m_freq);
+        BigramPhraseItem * item = &g_array_index(array, BigramPhraseItem, i);
+        printf("item:%d:%f\n", item->m_token, item->m_freq);
     }
 
     assert(single_gram.get_total_freq(freq));
@@ -71,8 +71,8 @@ int main(int argc, char * argv[]){
 
     printf("----------------------system----------------------------\n");
     for ( size_t i = 0; i < items->len; ++i){
-	phrase_token_t * token = &g_array_index(items, phrase_token_t, i);
-	printf("item:%d\n", *token);
+        phrase_token_t * token = &g_array_index(items, phrase_token_t, i);
+        printf("item:%d\n", *token);
     }
 
     assert(bigram.load_db("/tmp/test.db"));

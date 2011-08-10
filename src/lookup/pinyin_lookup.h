@@ -58,8 +58,8 @@ struct lookup_constraint_t{
      */
 
     union{
-	phrase_token_t m_token;
-	guint32 m_constraint_step; /* index of m_token */
+        phrase_token_t m_token;
+        guint32 m_constraint_step; /* index of m_token */
     };
 };
 

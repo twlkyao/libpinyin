@@ -50,7 +50,7 @@ int main(int argc, char * argv[]){
 
   int * p3 = (int *)chunk->begin();
   printf("%d\t%d\t%d\n", *p3, *(p3+1), *(p3+2));
-	
+        
   chunk->remove_content(sizeof(int), sizeof(int));
   printf("%d\t%d\n", *p3, *(p3+1));
 

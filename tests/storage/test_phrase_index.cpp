@@ -66,11 +66,11 @@ int main(int argc, char * argv[]){
     PhraseItem item2;
     guint32 time = record_time();
     for ( size_t i = 0; i < bench_times; ++i){
-	phrase_index.get_phrase_item(1, item2);
-	assert(item2.get_unigram_frequency() == 0);
-	assert(item2.get_n_pronunciation() == 2);
-	assert(item2.get_phrase_length() == 1);
-	assert(item2.get_pinyin_possibility(custom, &key2) == 0.75);
+        phrase_index.get_phrase_item(1, item2);
+        assert(item2.get_unigram_frequency() == 0);
+        assert(item2.get_n_pronunciation() == 2);
+        assert(item2.get_phrase_length() == 1);
+        assert(item2.get_pinyin_possibility(custom, &key2) == 0.75);
     }
     print_time(time, bench_times);
 
@@ -93,8 +93,8 @@ int main(int argc, char * argv[]){
 
     FILE* infile = fopen("../../data/gb_char.table", "r");
     if ( NULL == infile ){
-	fprintf(stderr, "open gb_char.table failed!\n");
-	exit(ENOENT);
+        fprintf(stderr, "open gb_char.table failed!\n");
+        exit(ENOENT);
     }
 
     phrase_index_load.load_text(1, infile);
@@ -102,8 +102,8 @@ int main(int argc, char * argv[]){
 
     infile = fopen("../../data/gbk_char.table", "r");
     if ( NULL == infile ){
-	fprintf(stderr, "open gbk_char.table failed!\n");
-	exit(ENOENT);
+        fprintf(stderr, "open gbk_char.table failed!\n");
+        exit(ENOENT);
     }
 
     phrase_index_load.load_text(2, infile);

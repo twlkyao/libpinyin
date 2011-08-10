@@ -34,7 +34,7 @@ class DirectBranchIterator: public IBranchIterator{//for nitem <= nbranch
 public:
     //Constructor
     DirectBranchIterator(LookupStepContent step_content)
-	:m_step_content(step_content)
+        :m_step_content(step_content)
     { m_iter_pos = 0; }
     
     //Destructor
@@ -42,24 +42,24 @@ public:
     
     //Member Function
     bool has_next(){
-	return m_iter_pos != m_step_content->len;
+        return m_iter_pos != m_step_content->len;
     }
     
     lookup_value_t next(){
-	lookup_value_t * tmp = &g_array_index(m_step_content, 
-					      lookup_value_t, m_iter_pos);
-	++m_iter_pos;
-	return *tmp;
+        lookup_value_t * tmp = &g_array_index(m_step_content, 
+                                              lookup_value_t, m_iter_pos);
+        ++m_iter_pos;
+        return *tmp;
     }
     
     lookup_value_t max(){
-	lookup_value_t * max_value = &g_array_index(m_step_content, lookup_value_t, 0);
-	for ( size_t i = 1 ; i < m_step_content->len; ++i){
-	    lookup_value_t * cur_value = &g_array_index(m_step_content, lookup_value_t, i);
-	    if ( cur_value->m_poss > max_value->m_poss )
-		max_value = cur_value;
-	}
-	return *max_value;
+        lookup_value_t * max_value = &g_array_index(m_step_content, lookup_value_t, 0);
+        for ( size_t i = 1 ; i < m_step_content->len; ++i){
+            lookup_value_t * cur_value = &g_array_index(m_step_content, lookup_value_t, i);
+            if ( cur_value->m_poss > max_value->m_poss )
+                max_value = cur_value;
+        }
+        return *max_value;
     }
 };
 
@@ -82,7 +82,7 @@ public:
     lookup_value_t next();
     
     lookup_value_t max(){
-	return m_max_value;
+        return m_max_value;
     }
     
 };
@@ -104,22 +104,22 @@ private:
     void play(int p, int lc, int rc);
     
     void init(int tree_size){
-	m_max_tree_size = tree_size;
-	//data buffer
-	m_buffer.set_size( sizeof(lookup_value_t) * (tree_size + 1) );
-	m_items = (lookup_value_t *) m_buffer.begin();
-	
-	//tree item buffer
-	m_tree_buffer.set_size( sizeof(int) * m_max_tree_size);
-	m_tree = (int * ) m_tree_buffer.begin();
-	m_tree_size = 0;
+        m_max_tree_size = tree_size;
+        //data buffer
+        m_buffer.set_size( sizeof(lookup_value_t) * (tree_size + 1) );
+        m_items = (lookup_value_t *) m_buffer.begin();
+        
+        //tree item buffer
+        m_tree_buffer.set_size( sizeof(int) * m_max_tree_size);
+        m_tree = (int * ) m_tree_buffer.begin();
+        m_tree_size = 0;
     }
     
 public:
     
     //Constructor
     WinnerTree(int tree_size = 10){
-	init(tree_size);
+        init(tree_size);
     }
     
     //Destructor
@@ -127,17 +127,17 @@ public:
 
     //need delete this
     IBranchIterator* get_iterator(LookupStepContent step){
-	if ( step->len <= nbranch )
-	    return new DirectBranchIterator(step);
-	//TODO:another situation > nbranch
-	assert(initialize(step));
-	return new WinnerTreeBranchIterator(*this);
+        if ( step->len <= nbranch )
+            return new DirectBranchIterator(step);
+        //TODO:another situation > nbranch
+        assert(initialize(step));
+        return new WinnerTreeBranchIterator(*this);
     }
     
 protected:
     
     int get_winner() const {
-	return (m_tree_size)? m_tree[1] : 0;
+        return (m_tree_size)? m_tree[1] : 0;
     }
     
     //Member Function

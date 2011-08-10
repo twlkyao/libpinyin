@@ -53,7 +53,7 @@ public:
     /* search method */
     /* the array result contains many items */
     bool search(/* in */ PhraseIndexRange * range, 
-	       /* out */ BigramPhraseArray array);
+               /* out */ BigramPhraseArray array);
 
     /* insert_freq method
      */
@@ -68,12 +68,12 @@ public:
     /* get_freq method
      */
     bool get_freq(/* in */ phrase_token_t token,
-	       /* out */ guint32 & freq); 
+               /* out */ guint32 & freq); 
     
     /* set_freq method
      */
     bool set_freq(/* in */ phrase_token_t token,
-		  /* in */ guint32 freq);
+                  /* in */ guint32 freq);
     
     /* get_total_freq method
      * used in user bigram table
@@ -96,20 +96,20 @@ private:
     DB * m_db;
 
     void reset(){
-	if ( m_db ){
+        if ( m_db ){
         m_db->sync(m_db, 0);
-	    m_db->close(m_db, 0);
-	    m_db = NULL;
-	}
+            m_db->close(m_db, 0);
+            m_db = NULL;
+        }
     }
 
 public:
     Bigram(){
-	m_db = NULL;
+        m_db = NULL;
     }
 
     ~Bigram(){
-	reset();
+        reset();
     }
 
     /* load/save berkeley db in memory. */

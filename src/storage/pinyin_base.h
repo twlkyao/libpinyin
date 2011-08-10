@@ -40,23 +40,23 @@ struct PinyinKeyPos{
     int    m_pos;
     size_t m_len;
     PinyinKeyPos(){
-	m_pos = 0;
-	m_len = 0;
+        m_pos = 0;
+        m_len = 0;
     }
     void set_pos(int pos){
-	m_pos = pos;
+        m_pos = pos;
     }
     void set_length(size_t len){
-	m_len = len;
+        m_len = len;
     }
     int get_pos(){
-	return m_pos;
+        return m_pos;
     }
     int get_end_pos(){
-	return m_pos + m_len;
+        return m_pos + m_len;
     }
     size_t get_length(){
-	return m_len;
+        return m_len;
     }
 };
 
@@ -242,7 +242,7 @@ struct PinyinCustomSettings
             for (size_t i=0; i<=PINYIN_AmbLast; ++i) use_ambiguities [i] = use;
         else {
             use_ambiguities [0] = false;
-		    use_ambiguities [static_cast<size_t>(amb)] = use;
+                    use_ambiguities [static_cast<size_t>(amb)] = use;
             for (size_t i=1; i<=PINYIN_AmbLast; ++i)
                 if (use_ambiguities [i]) {
                     use_ambiguities [0] = true;
@@ -303,21 +303,21 @@ struct PinyinKey
 {
     friend class PinyinBitmapIndexLevel;
     friend inline int pinyin_exact_compare(const PinyinKey key_lhs[], 
-					   const PinyinKey key_rhs[],
-					   int word_length);
+                                           const PinyinKey key_rhs[],
+                                           int word_length);
     friend inline int pinyin_compare_with_ambiguities
     (const PinyinCustomSettings &custom,
      const PinyinKey* key_lhs,
      const PinyinKey* key_rhs,
      int word_length);
     friend inline void compute_lower_value(const PinyinCustomSettings &custom,
-					   PinyinKey in_keys[], 
-					   PinyinKey out_keys[], 
-					   int word_length);
+                                           PinyinKey in_keys[], 
+                                           PinyinKey out_keys[], 
+                                           int word_length);
     friend inline void compute_upper_value(const PinyinCustomSettings &custom,
-					   PinyinKey in_keys[], 
-					   PinyinKey out_keys[], 
-					   int word_length);
+                                           PinyinKey in_keys[], 
+                                           PinyinKey out_keys[], 
+                                           int word_length);
     
 private:
     guint16 m_initial : 5;   /**< pinyin initial */
@@ -610,7 +610,7 @@ public:
      * @return true if the key is valid.
      */
     virtual bool operator () (PinyinKey key) const{
-	return true;
+        return true;
     }
 };
 
@@ -711,16 +711,16 @@ public:
 };
 
 int pinyin_compare_initial (const PinyinCustomSettings &custom,
-			    PinyinInitial lhs,
-			    PinyinInitial rhs);
+                            PinyinInitial lhs,
+                            PinyinInitial rhs);
 
 int pinyin_compare_final (const PinyinCustomSettings &custom,
-			  PinyinFinal lhs,
-			  PinyinFinal rhs);
+                          PinyinFinal lhs,
+                          PinyinFinal rhs);
 
 int pinyin_compare_tone (const PinyinCustomSettings &custom,
-			 PinyinTone lhs,
-			 PinyinTone rhs);
+                         PinyinTone lhs,
+                         PinyinTone rhs);
 };
 
 #endif

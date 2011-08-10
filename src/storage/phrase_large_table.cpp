@@ -137,23 +137,23 @@ PhraseLengthIndexLevel::~PhraseLengthIndexLevel(){
     for ( size_t i = 0 ; i < m_phrase_array_indexes->len; ++i){
         switch (i){
             CASE(0);
-            	    CASE(1);
-	    CASE(2);
-	    CASE(3);
-	    CASE(4);
-	    CASE(5);
-	    CASE(6);
-	    CASE(7);
-	    CASE(8);
-	    CASE(9);
-	    CASE(10);
-	    CASE(11);
-	    CASE(12);
-	    CASE(13);
-	    CASE(14);
-	    CASE(15);
-	default:
-	    assert(false);
+            CASE(1);
+            CASE(2);
+            CASE(3);
+            CASE(4);
+            CASE(5);
+            CASE(6);
+            CASE(7);
+            CASE(8);
+            CASE(9);
+            CASE(10);
+            CASE(11);
+            CASE(12);
+            CASE(13);
+            CASE(14);
+            CASE(15);
+        default:
+            assert(false);
         }
     }
     g_array_free(m_phrase_array_indexes, TRUE);
@@ -181,23 +181,23 @@ int PhraseLengthIndexLevel::search(int phrase_length,
 
     switch ( phrase_length ){
         CASE(0);
-	CASE(1);
-	CASE(2);
-	CASE(3);
-	CASE(4);
-	CASE(5);
-	CASE(6);
-	CASE(7);
-	CASE(8);
-	CASE(9);
-	CASE(10);
-	CASE(11);
-	CASE(12);
-	CASE(13);
-	CASE(14);
-	CASE(15);
+        CASE(1);
+        CASE(2);
+        CASE(3);
+        CASE(4);
+        CASE(5);
+        CASE(6);
+        CASE(7);
+        CASE(8);
+        CASE(9);
+        CASE(10);
+        CASE(11);
+        CASE(12);
+        CASE(13);
+        CASE(14);
+        CASE(15);
     default:
-	assert(false);
+        assert(false);
     }
 #undef CASE
 }
@@ -253,24 +253,24 @@ int PhraseLengthIndexLevel::add_index( int phrase_length, /* in */ utf16_t phras
     }
 
     switch(phrase_length){
-	CASE(0);
-	CASE(1);
-	CASE(2);
-	CASE(3);
-	CASE(4);
-	CASE(5);
-	CASE(6);
-	CASE(7);
-	CASE(8);
-	CASE(9);
-	CASE(10);
-	CASE(11);
-	CASE(12);
-	CASE(13);
-	CASE(14);
-	CASE(15);
+        CASE(0);
+        CASE(1);
+        CASE(2);
+        CASE(3);
+        CASE(4);
+        CASE(5);
+        CASE(6);
+        CASE(7);
+        CASE(8);
+        CASE(9);
+        CASE(10);
+        CASE(11);
+        CASE(12);
+        CASE(13);
+        CASE(14);
+        CASE(15);
     default:
-	assert(false);
+        assert(false);
     }
 
 #undef CASE
@@ -290,24 +290,24 @@ int PhraseLengthIndexLevel::remove_index( int phrase_length, /* in */ utf16_t ph
     }
 
     switch(phrase_length){
-	CASE(0);
-	CASE(1);
-	CASE(2);
-	CASE(3);
-	CASE(4);
-	CASE(5);
-	CASE(6);
-	CASE(7);
-	CASE(8);
-	CASE(9);
-	CASE(10);
-	CASE(11);
-	CASE(12);
-	CASE(13);
-	CASE(14);
-	CASE(15);
+        CASE(0);
+        CASE(1);
+        CASE(2);
+        CASE(3);
+        CASE(4);
+        CASE(5);
+        CASE(6);
+        CASE(7);
+        CASE(8);
+        CASE(9);
+        CASE(10);
+        CASE(11);
+        CASE(12);
+        CASE(13);
+        CASE(14);
+        CASE(15);
     default:
-	assert(false);
+        assert(false);
     }
 #undef CASE
 }
@@ -465,24 +465,24 @@ bool PhraseLengthIndexLevel::load(MemoryChunk * chunk, table_offset_t offset, ta
             break;                                                      \
         }
         switch ( i ){
-	    CASE(0);
-	    CASE(1);
-	    CASE(2);
-	    CASE(3);
-	    CASE(4);
-	    CASE(5);
-	    CASE(6);
-	    CASE(7);
-	    CASE(8);
-	    CASE(9);
-	    CASE(10);
-	    CASE(11);
-	    CASE(12);
-	    CASE(13);
-	    CASE(14);
-	    CASE(15);
-	default:
-	    assert(false);
+            CASE(0);
+            CASE(1);
+            CASE(2);
+            CASE(3);
+            CASE(4);
+            CASE(5);
+            CASE(6);
+            CASE(7);
+            CASE(8);
+            CASE(9);
+            CASE(10);
+            CASE(11);
+            CASE(12);
+            CASE(13);
+            CASE(14);
+            CASE(15);
+        default:
+            assert(false);
         }
 #undef CASE
     }
@@ -519,24 +519,24 @@ bool PhraseLengthIndexLevel::store(MemoryChunk * new_chunk, table_offset_t offse
             break;                                                      \
         }
         switch ( i ){
-	    CASE(0);
-	    CASE(1);
-	    CASE(2);
-	    CASE(3);
-	    CASE(4);
-	    CASE(5);
-	    CASE(6);
-	    CASE(7);
-	    CASE(8);
-	    CASE(9);
-	    CASE(10);
-	    CASE(11);
-	    CASE(12);
-	    CASE(13);
-	    CASE(14);
-	    CASE(15);
-	default:
-	    assert(false);
+            CASE(0);
+            CASE(1);
+            CASE(2);
+            CASE(3);
+            CASE(4);
+            CASE(5);
+            CASE(6);
+            CASE(7);
+            CASE(8);
+            CASE(9);
+            CASE(10);
+            CASE(11);
+            CASE(12);
+            CASE(13);
+            CASE(14);
+            CASE(15);
+        default:
+            assert(false);
         }
         //add '#'
         new_chunk->set_content(offset, &c_separate, sizeof(char));

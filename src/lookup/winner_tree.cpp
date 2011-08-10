@@ -37,7 +37,7 @@ WinnerTreeBranchIterator::WinnerTreeBranchIterator(WinnerTree & tree)
 
 bool WinnerTreeBranchIterator::has_next(){
     if ( m_counter >= m_tree.m_tree_size)
-	return false;
+        return false;
     return m_counter < nbranch;
 }
 
@@ -45,7 +45,7 @@ lookup_value_t WinnerTreeBranchIterator::next(){
     int winner = m_tree.get_winner();
     lookup_value_t tmp = m_tree.m_items[winner];
     m_tree.m_items[winner].m_poss = 
-	- FLT_MAX;
+        - FLT_MAX;
     m_tree.replay(winner);
     ++m_counter;
     return tmp;
@@ -55,8 +55,8 @@ void WinnerTree::play(int p, int lc, int rc){
     m_tree[p] = winner(lc, rc);
     //continue competition
     while( p > 1 && p % 2) {
-	m_tree[p/2] = winner( m_tree[p - 1], m_tree[p]);
-	p/=2;
+        m_tree[p/2] = winner( m_tree[p - 1], m_tree[p]);
+        p/=2;
   }
 }
 
@@ -64,7 +64,7 @@ void WinnerTree::play(int p, int lc, int rc){
 bool WinnerTree::initialize(LookupStepContent cur_step){
     size_t size = cur_step->len;
     if ( size > m_max_tree_size ){
-	init(size);
+        init(size);
     }
     assert(size > nbranch);
     m_tree_size = size;
@@ -73,8 +73,8 @@ bool WinnerTree::initialize(LookupStepContent cur_step){
     int nindex = 1;
     
     for( size_t i = 0; i < cur_step->len ; ++i){
-	lookup_value_t * cur_value = &g_array_index(cur_step, lookup_value_t, i);
-	m_items[nindex++] = *cur_value;
+        lookup_value_t * cur_value = &g_array_index(cur_step, lookup_value_t, i);
+        m_items[nindex++] = *cur_value;
     }
     
     //compute s = 2 ^ log(n -1)
@@ -86,11 +86,11 @@ bool WinnerTree::initialize(LookupStepContent cur_step){
   
     //compute outside nodes
     for( i = 2; i <= m_low_ext; i += 2)
-	play((m_offset + i)/2, i - 1, i);
+        play((m_offset + i)/2, i - 1, i);
     //compute other nodes
     if ( m_tree_size % 2){
-	play( m_tree_size / 2, m_tree[m_tree_size - 1], m_low_ext +1);
-	i = m_low_ext + 3;
+        play( m_tree_size / 2, m_tree[m_tree_size - 1], m_low_ext +1);
+        i = m_low_ext + 3;
     }else i = m_low_ext + 2;
   
     //compute others 
@@ -108,18 +108,18 @@ void WinnerTree::replay(int i){
     
     //first compete
     if ( i <= m_low_ext){
-	p = (m_offset + i) / 2;
-	lc = 2 * p - m_offset;
-	rc = lc + 1;
+        p = (m_offset + i) / 2;
+        lc = 2 * p - m_offset;
+        rc = lc + 1;
     }else{
-	p = (i - m_low_ext + m_tree_size -1) / 2;
-	if ( 2 * p == m_tree_size - 1 ){
-	    lc = m_tree[2*p];
-	    rc = i;
-	}else{
-	    lc = 2 * p - m_tree_size + 1 + m_low_ext;
-	    rc = lc + 1;
-	}
+        p = (i - m_low_ext + m_tree_size -1) / 2;
+        if ( 2 * p == m_tree_size - 1 ){
+            lc = m_tree[2*p];
+            rc = i;
+        }else{
+            lc = 2 * p - m_tree_size + 1 + m_low_ext;
+            rc = lc + 1;
+        }
     }
     
     m_tree[p] = winner(lc, rc);
@@ -127,13 +127,13 @@ void WinnerTree::replay(int i){
     //added by wupeng
     if ( ( p | 0x01 )  == m_tree_size ){
         p /= 2;
-	m_tree[p] = winner( m_tree[2 * p], m_low_ext + 1 );
+        m_tree[p] = winner( m_tree[2 * p], m_low_ext + 1 );
     }
     
     //compute others
     p /= 2;
     for( ; p >= 1 ; p /= 2)
-	m_tree[p] = winner( m_tree[2 * p], m_tree[2 * p + 1]);
+        m_tree[p] = winner( m_tree[2 * p], m_tree[2 * p + 1]);
 }
 
 int WinnerTree::winner(int lc, int rc){

@@ -994,9 +994,9 @@ __default_parser_parse_recursive (const PinyinValidator &validator,
 
     // The best keys start from this position have been found, just return the result.
     DefaultParserCacheElement* element = &g_array_index
-	(cache, DefaultParserCacheElement, start);
-						       
-						       
+        (cache, DefaultParserCacheElement, start);
+                                                       
+                                                       
     if (element->num_keys >=0) {
         num_keys = element->num_keys;
         return element->parsed_len;
@@ -1021,12 +1021,12 @@ __default_parser_parse_recursive (const PinyinValidator &validator,
     first_len = __default_parser_parse_one_key (validator, first_key, str, len);
 
     if (!first_len) {
-	element = &g_array_index(cache, DefaultParserCacheElement, start);
+        element = &g_array_index(cache, DefaultParserCacheElement, start);
 
         element->key = PinyinKey ();
         element->num_keys = 0;
         element->parsed_len = 0;
-	element->next_start = start;
+        element->next_start = start;
         return 0;
     }
 
@@ -1062,8 +1062,8 @@ __default_parser_parse_recursive (const PinyinValidator &validator,
                                                                  start + first_len);
 
 
-	DefaultParserCacheElement* best_remained_element = &g_array_index
-	    (cache, DefaultParserCacheElement, best_remained_start);		
+        DefaultParserCacheElement* best_remained_element = &g_array_index
+            (cache, DefaultParserCacheElement, best_remained_start);            
 
                 // A better seq was found.
                 if (remained_len != 0 && (remained_len + first_len) >= (best_remained_len + best_first_len) &&
@@ -1092,7 +1092,7 @@ __default_parser_parse_recursive (const PinyinValidator &validator,
     
     
     element = &g_array_index
-	(cache, DefaultParserCacheElement, start);
+        (cache, DefaultParserCacheElement, start);
     
     pos.set_pos(start);
     pos.set_length(best_first_len);
@@ -1136,9 +1136,9 @@ PinyinDefaultParser::parse (const PinyinValidator &validator, PinyinKeyVector & 
     DefaultParserCache cache = g_array_new (FALSE, TRUE, sizeof (DefaultParserCacheElement));
     g_array_set_size(cache, len);
     for ( size_t index = 0 ; index < len ; index++){
-	DefaultParserCacheElement * element =
-	    &g_array_index(cache,DefaultParserCacheElement, index);
-	*element = elm;	
+        DefaultParserCacheElement * element =
+            &g_array_index(cache,DefaultParserCacheElement, index);
+        *element = elm; 
     }
     int start = 0;
     int num_keys = 0;
@@ -1146,10 +1146,10 @@ PinyinDefaultParser::parse (const PinyinValidator &validator, PinyinKeyVector & 
     len = __default_parser_parse_recursive (validator, cache, start, num_keys, str, len, 0);
 
     for (size_t i=0; i<(size_t)num_keys; ++i) {
-	DefaultParserCacheElement* element = &g_array_index
-	    (cache, DefaultParserCacheElement, start);
+        DefaultParserCacheElement* element = &g_array_index
+            (cache, DefaultParserCacheElement, start);
         g_array_append_val(keys, element->key);
-	g_array_append_val(poses, element->pos);
+        g_array_append_val(poses, element->pos);
         start = element->next_start;
     }
 
@@ -1289,10 +1289,10 @@ PinyinShuangPinParser::parse (const PinyinValidator &validator, PinyinKeyVector 
         int one_len = parse_one_key (validator, key, str, len);
 
         if (one_len) {
-	    pos.set_pos(used_len);
-	    pos.set_length(one_len);
+            pos.set_pos(used_len);
+            pos.set_length(one_len);
             g_array_append_val(keys, key);
-	    g_array_append_val(poses, pos);
+            g_array_append_val(poses, pos);
         } else {
             break;
         }
@@ -1357,45 +1357,45 @@ namespace pinyin{
 //////////////////////////////////////////////////////////////////////////////
 // implementation of PinyinKey comparision classe
 int pinyin_compare_initial (const PinyinCustomSettings &custom,
-			    PinyinInitial lhs,
-			    PinyinInitial rhs)
+                            PinyinInitial lhs,
+                            PinyinInitial rhs)
 {
-	if ((lhs == rhs) ||
-		(custom.use_ambiguities [PINYIN_AmbZhiZi] &&
-		 ((lhs == PINYIN_Zhi && rhs == PINYIN_Zi) ||
-		  (lhs == PINYIN_Zi && rhs == PINYIN_Zhi))) ||
-			  
-		(custom.use_ambiguities [PINYIN_AmbChiCi] &&
-		 ((lhs == PINYIN_Chi && rhs == PINYIN_Ci) ||
-		  (lhs == PINYIN_Ci && rhs == PINYIN_Chi))) ||
-			  
-		(custom.use_ambiguities [PINYIN_AmbShiSi] &&
-		 ((lhs == PINYIN_Shi && rhs == PINYIN_Si) ||
-		  (lhs == PINYIN_Si && rhs == PINYIN_Shi))) ||
+        if ((lhs == rhs) ||
+                (custom.use_ambiguities [PINYIN_AmbZhiZi] &&
+                 ((lhs == PINYIN_Zhi && rhs == PINYIN_Zi) ||
+                  (lhs == PINYIN_Zi && rhs == PINYIN_Zhi))) ||
+                          
+                (custom.use_ambiguities [PINYIN_AmbChiCi] &&
+                 ((lhs == PINYIN_Chi && rhs == PINYIN_Ci) ||
+                  (lhs == PINYIN_Ci && rhs == PINYIN_Chi))) ||
+                          
+                (custom.use_ambiguities [PINYIN_AmbShiSi] &&
+                 ((lhs == PINYIN_Shi && rhs == PINYIN_Si) ||
+                  (lhs == PINYIN_Si && rhs == PINYIN_Shi))) ||
 
-	        (custom.use_ambiguities [PINYIN_AmbLeRi] && 
-		 ((lhs == PINYIN_Le && rhs == PINYIN_Ri) ||
-		  (lhs == PINYIN_Ri && rhs == PINYIN_Le))) ||
+                (custom.use_ambiguities [PINYIN_AmbLeRi] && 
+                 ((lhs == PINYIN_Le && rhs == PINYIN_Ri) ||
+                  (lhs == PINYIN_Ri && rhs == PINYIN_Le))) ||
 
-	        (custom.use_ambiguities [PINYIN_AmbNeLe] && 
-		 ((lhs == PINYIN_Ne && rhs == PINYIN_Le) ||
-		  (lhs == PINYIN_Le && rhs == PINYIN_Ne))) ||
+                (custom.use_ambiguities [PINYIN_AmbNeLe] && 
+                 ((lhs == PINYIN_Ne && rhs == PINYIN_Le) ||
+                  (lhs == PINYIN_Le && rhs == PINYIN_Ne))) ||
 
-	        (custom.use_ambiguities [PINYIN_AmbFoHe] && 
-		 ((lhs == PINYIN_Fo && rhs == PINYIN_He) ||
-		  (lhs == PINYIN_He && rhs == PINYIN_Fo))) ||
+                (custom.use_ambiguities [PINYIN_AmbFoHe] && 
+                 ((lhs == PINYIN_Fo && rhs == PINYIN_He) ||
+                  (lhs == PINYIN_He && rhs == PINYIN_Fo))) ||
 
-		(custom.use_ambiguities [PINYIN_AmbGeKe] &&
-		 ((lhs == PINYIN_Ge && rhs == PINYIN_Ke) ||
-		  (lhs == PINYIN_Ke && rhs == PINYIN_Ge)))
-	    )
-	  return 0;
-	else return (lhs - rhs);
+                (custom.use_ambiguities [PINYIN_AmbGeKe] &&
+                 ((lhs == PINYIN_Ge && rhs == PINYIN_Ke) ||
+                  (lhs == PINYIN_Ke && rhs == PINYIN_Ge)))
+            )
+          return 0;
+        else return (lhs - rhs);
 }
 
 int pinyin_compare_final (const PinyinCustomSettings &custom,
-			  PinyinFinal lhs,
-			  PinyinFinal rhs)
+                          PinyinFinal lhs,
+                          PinyinFinal rhs)
 {
     if(((lhs == rhs) ||
         (custom.use_ambiguities [PINYIN_AmbAnAng] &&
@@ -1416,8 +1416,8 @@ int pinyin_compare_final (const PinyinCustomSettings &custom,
 }
 
 int pinyin_compare_tone (const PinyinCustomSettings &custom,
-			 PinyinTone lhs,
-			 PinyinTone rhs)
+                         PinyinTone lhs,
+                         PinyinTone rhs)
 {
     if(lhs == rhs || !lhs || !rhs)
         return 0;

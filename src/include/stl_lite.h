@@ -23,7 +23,7 @@ namespace std_lite{
     {
       //return __b < __a ? __b : __a;
       if (__b < __a)
-	return __b;
+        return __b;
       return __a;
     }
 
@@ -44,7 +44,7 @@ namespace std_lite{
     {
       //return  __a < __b ? __b : __a;
       if (__a < __b)
-	return __b;
+        return __b;
       return __a;
     }
 
@@ -86,7 +86,7 @@ namespace std_lite{
       /** There is also a templated copy ctor for the @c pair class itself.  */
       template<class _U1, class _U2>
         pair(const pair<_U1, _U2>& __p)
-	: first(__p.first), second(__p.second) { }
+        : first(__p.first), second(__p.second) { }
     };
 
   /// Two pairs of the same type are equal iff their members are equal.
@@ -100,7 +100,7 @@ namespace std_lite{
     inline bool
     operator<(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
     { return __x.first < __y.first
-	     || (!(__y.first < __x.first) && __x.second < __y.second); }
+             || (!(__y.first < __x.first) && __x.second < __y.second); }
 
   /// Uses @c operator== to find the result.
   template<class _T1, class _T2>
@@ -160,7 +160,7 @@ namespace std_lite{
   template<typename _ForwardIterator, typename _Tp, typename _Compare>
     _ForwardIterator
     lower_bound(_ForwardIterator __first, _ForwardIterator __last,
-		const _Tp& __val, _Compare __comp)
+                const _Tp& __val, _Compare __comp)
     {
       typedef size_t _DistanceType;
 
@@ -169,19 +169,19 @@ namespace std_lite{
       _ForwardIterator __middle;
 
       while (__len > 0)
-	{
-	  __half = __len >> 1;
-	  __middle = __first;
-	  __middle += __half;
-	  if (__comp(*__middle, __val))
-	    {
-	      __first = __middle;
-	      ++__first;
-	      __len = __len - __half - 1;
-	    }
-	  else
-	    __len = __half;
-	}
+        {
+          __half = __len >> 1;
+          __middle = __first;
+          __middle += __half;
+          if (__comp(*__middle, __val))
+            {
+              __first = __middle;
+              ++__first;
+              __len = __len - __half - 1;
+            }
+          else
+            __len = __half;
+        }
       return __first;
     }
 
@@ -202,7 +202,7 @@ namespace std_lite{
   template<typename _ForwardIterator, typename _Tp, typename _Compare>
     _ForwardIterator
     upper_bound(_ForwardIterator __first, _ForwardIterator __last,
-		const _Tp& __val, _Compare __comp)
+                const _Tp& __val, _Compare __comp)
     {
       typedef size_t _DistanceType;
       _DistanceType __len = __last - __first;
@@ -210,19 +210,19 @@ namespace std_lite{
       _ForwardIterator __middle;
 
       while (__len > 0)
-	{
-	  __half = __len >> 1;
-	  __middle = __first;
-	  __middle += __half;
-	  if (__comp(__val, *__middle))
-	    __len = __half;
-	  else
-	    {
-	      __first = __middle;
-	      ++__first;
-	      __len = __len - __half - 1;
-	    }
-	}
+        {
+          __half = __len >> 1;
+          __middle = __first;
+          __middle += __half;
+          if (__comp(__val, *__middle))
+            __len = __half;
+          else
+            {
+              __first = __middle;
+              ++__first;
+              __len = __len - __half - 1;
+            }
+        }
       return __first;
     }
 
@@ -246,8 +246,8 @@ namespace std_lite{
   template<typename _ForwardIterator, typename _Tp, typename _Compare>
     pair<_ForwardIterator, _ForwardIterator>
     equal_range(_ForwardIterator __first, _ForwardIterator __last,
-		const _Tp& __val,
-		_Compare __comp)
+                const _Tp& __val,
+                _Compare __comp)
     {
 
       typedef size_t _DistanceType;
@@ -257,26 +257,26 @@ namespace std_lite{
       _ForwardIterator __middle, __left, __right;
 
       while (__len > 0)
-	{
-	  __half = __len >> 1;
-	  __middle = __first;
-	  __middle += __half;
-	  if (__comp(*__middle, __val))
-	    {
-	      __first = __middle;
-	      ++__first;
-	      __len = __len - __half - 1;
-	    }
-	  else if (__comp(__val, *__middle))
-	    __len = __half;
-	  else
-	    {
-	      __left = lower_bound(__first, __middle, __val, __comp);
-	      __first += __len;
-	      __right = upper_bound(++__middle, __first, __val, __comp);
-	      return pair<_ForwardIterator, _ForwardIterator>(__left, __right);
-	    }
-	}
+        {
+          __half = __len >> 1;
+          __middle = __first;
+          __middle += __half;
+          if (__comp(*__middle, __val))
+            {
+              __first = __middle;
+              ++__first;
+              __len = __len - __half - 1;
+            }
+          else if (__comp(__val, *__middle))
+            __len = __half;
+          else
+            {
+              __left = lower_bound(__first, __middle, __val, __comp);
+              __first += __len;
+              __right = upper_bound(++__middle, __first, __val, __comp);
+              return pair<_ForwardIterator, _ForwardIterator>(__left, __right);
+            }
+        }
       return pair<_ForwardIterator, _ForwardIterator>(__first, __first);
     }
 

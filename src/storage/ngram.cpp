@@ -58,24 +58,24 @@ bool SingleGram::prune(){
     assert(false);
 #if 0
     SingleGramItem * begin = (SingleGramItem *)
-	((const char *)(m_chunk.begin()) + sizeof(guint32));
+        ((const char *)(m_chunk.begin()) + sizeof(guint32));
     SingleGramItem * end = (SingleGramItem *)m_chunk.end();
     
     size_t nitem = 0;
     for ( SingleGramItem * cur = begin; cur != end; ++cur){
-	cur->m_freq--;
-	nitem++;
-	if ( cur->m_freq == 0 ){
-	    size_t offset = sizeof(guint32) + (cur - begin)
-		* sizeof(SingleGramItem) ;
-	    m_chunk.remove_content(offset, sizeof(SingleGramItem));
-	}
+        cur->m_freq--;
+        nitem++;
+        if ( cur->m_freq == 0 ){
+            size_t offset = sizeof(guint32) + (cur - begin)
+                * sizeof(SingleGramItem) ;
+            m_chunk.remove_content(offset, sizeof(SingleGramItem));
+        }
     }
     guint32 total_freq;
     assert(get_total_freq(total_freq));
     assert(set_total_freq(total_freq - nitem));
 #endif
-	return true;
+        return true;
 }
 
 static bool token_less_than(const SingleGramItem & lhs,const SingleGramItem & rhs){
@@ -102,9 +102,9 @@ bool SingleGram::retrieve_all(/* out */ BigramPhraseWithCountArray array){
 }
 
 bool SingleGram::search(/* in */ PhraseIndexRange * range, 
-			/* out */ BigramPhraseArray array){
+                        /* out */ BigramPhraseArray array){
     const SingleGramItem * begin = (const SingleGramItem *)
-	((const char *)(m_chunk.begin()) + sizeof(guint32));
+        ((const char *)(m_chunk.begin()) + sizeof(guint32));
     const SingleGramItem * end = (const SingleGramItem *)m_chunk.end();
 
     SingleGramItem compare_item;
@@ -116,11 +116,11 @@ bool SingleGram::search(/* in */ PhraseIndexRange * range,
     assert(get_total_freq(total_freq));
 
     for ( ; cur_item != end; ++cur_item){
-	if ( cur_item->m_token >= range->m_range_end )
-	    break;
-	bigram_item.m_token = cur_item->m_token;
-	bigram_item.m_freq = cur_item->m_freq / (gfloat)total_freq;
-	g_array_append_val(array, bigram_item);
+        if ( cur_item->m_token >= range->m_range_end )
+            break;
+        bigram_item.m_token = cur_item->m_token;
+        bigram_item.m_freq = cur_item->m_freq / (gfloat)total_freq;
+        g_array_append_val(array, bigram_item);
     }
 
     return true;
@@ -183,40 +183,40 @@ bool SingleGram::get_freq(/* in */ phrase_token_t token,
                           /* out */ guint32 & freq){
     freq = 0;
     const SingleGramItem * begin = (const SingleGramItem *)
-	((const char *)(m_chunk.begin()) + sizeof(guint32));
+        ((const char *)(m_chunk.begin()) + sizeof(guint32));
     const SingleGramItem * end = (const SingleGramItem *)m_chunk.end();
     SingleGramItem compare_item;
     compare_item.m_token = token;
     const SingleGramItem * cur_item = std_lite::lower_bound(begin, end, compare_item, token_less_than);
     
     for ( ; cur_item != end; ++cur_item){
-	if ( cur_item->m_token > token )
-	    return false;
-	if ( cur_item->m_token == token ){
-	    freq = cur_item -> m_freq;
-	    return true;
-	}
+        if ( cur_item->m_token > token )
+            return false;
+        if ( cur_item->m_token == token ){
+            freq = cur_item -> m_freq;
+            return true;
+        }
     }
     return false;
 }
 
 bool SingleGram::set_freq( /* in */ phrase_token_t token,
-			   /* in */ guint32 freq){
+                           /* in */ guint32 freq){
     SingleGramItem * begin = (SingleGramItem *)
-	((const char *)(m_chunk.begin()) + sizeof(guint32));
+        ((const char *)(m_chunk.begin()) + sizeof(guint32));
     SingleGramItem * end = (SingleGramItem *)m_chunk.end();
     SingleGramItem compare_item;
     compare_item.m_token = token;
     SingleGramItem * cur_item = std_lite::lower_bound(begin, end, compare_item, token_less_than);
     
     for ( ;cur_item != end; ++cur_item){
-	if ( cur_item->m_token > token ){
-	    return false;
-	}
-	if ( cur_item->m_token == token ){
-	    cur_item -> m_freq = freq;
-	    return true;
-	}
+        if ( cur_item->m_token > token ){
+            return false;
+        }
+        if ( cur_item->m_token == token ){
+            cur_item -> m_freq = freq;
+            return true;
+        }
     }
     return false;
 }
@@ -324,7 +324,7 @@ bool Bigram::attach(const char * dbfile, guint32 flags){
     int ret = db_create(&m_db, NULL, 0);
     if ( ret != 0 )
         assert(false);
-	
+        
     ret = m_db->open(m_db, NULL, dbfile, NULL,
                      DB_HASH, db_flags, 0644);
     if ( ret != 0)
@@ -355,7 +355,7 @@ bool Bigram::load(phrase_token_t index, SingleGram * & single_gram){
 
 bool Bigram::store(phrase_token_t index, SingleGram * single_gram){
     if ( !m_db )
-	return false;
+        return false;
 
     DBT db_key;
     memset(&db_key, 0, sizeof(DBT));
@@ -385,7 +385,7 @@ bool Bigram::get_all_items(GArray * items){
     /* Initialize our DBTs. */
     memset(&key, 0, sizeof(DBT));
     memset(&data, 0, sizeof(DBT));
-	
+        
     /* Iterate over the database, retrieving each record in turn. */
     while ((ret = cursorp->c_get(cursorp, &key, &data, DB_NEXT)) == 0) {
         assert(key.size == sizeof(phrase_token_t));

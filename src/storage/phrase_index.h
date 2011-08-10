@@ -63,8 +63,8 @@ private:
 public:
     /* Null Constructor */
     PhraseItem(){
-	m_chunk.set_size(phrase_item_header);
-	memset(m_chunk.begin(), 0, m_chunk.size());
+        m_chunk.set_size(phrase_item_header);
+        memset(m_chunk.begin(), 0, m_chunk.size());
     }
 
 #if 0
@@ -76,61 +76,61 @@ public:
 
     /* functions */
     guint8 get_phrase_length(){
-	char * buf_begin = (char *)m_chunk.begin();
-	return (*(guint8 *)buf_begin);
+        char * buf_begin = (char *)m_chunk.begin();
+        return (*(guint8 *)buf_begin);
     }
 
     guint8 get_n_pronunciation(){
-	char * buf_begin = ( char *) m_chunk.begin();
-	return (*(guint8 *)(buf_begin + sizeof(guint8)));
+        char * buf_begin = ( char *) m_chunk.begin();
+        return (*(guint8 *)(buf_begin + sizeof(guint8)));
     }
 
     guint32 get_unigram_frequency(){
-	char * buf_begin = (char *)m_chunk.begin();
-	return (*(guint32 *)(buf_begin + sizeof(guint8) + sizeof(guint8)));
+        char * buf_begin = (char *)m_chunk.begin();
+        return (*(guint32 *)(buf_begin + sizeof(guint8) + sizeof(guint8)));
     }
 
     gfloat get_pinyin_possibility(PinyinCustomSettings & custom, 
-				  PinyinKey * pinyin_keys){
-	guint8 phrase_length = get_phrase_length();
-	guint8 npron = get_n_pronunciation();
-	size_t offset = phrase_item_header + phrase_length * sizeof ( utf16_t );
-	char * buf_begin = (char *)m_chunk.begin();
-	guint32 matched = 0, total_freq =0;
-	for ( int i = 0 ; i < npron ; ++i){
-	    char * pinyin_begin = buf_begin + offset + 
-		i * ( phrase_length * sizeof(PinyinKey) + sizeof(guint32) );
-	    guint32 * freq = (guint32 *)(pinyin_begin + phrase_length * sizeof(PinyinKey));
-	    total_freq += *freq;
-	    if ( 0 == pinyin_compare_with_ambiguities(custom, 
-						      (PinyinKey *)pinyin_begin,
-						      pinyin_keys,
-						      phrase_length)){
-		matched += *freq;
-	    }
-	}
-	// use preprocessor to avoid zero freq, in gen_pinyin_table.
-	/*
-	if ( 0 == total_freq )
-	    return 0.1;
-	*/
-	gfloat retval = matched / (gfloat) total_freq;
-	/*
-	if ( 0 == retval )
-	    return 0.03;
-	*/
-	return retval;
+                                  PinyinKey * pinyin_keys){
+        guint8 phrase_length = get_phrase_length();
+        guint8 npron = get_n_pronunciation();
+        size_t offset = phrase_item_header + phrase_length * sizeof ( utf16_t );
+        char * buf_begin = (char *)m_chunk.begin();
+        guint32 matched = 0, total_freq =0;
+        for ( int i = 0 ; i < npron ; ++i){
+            char * pinyin_begin = buf_begin + offset + 
+                i * ( phrase_length * sizeof(PinyinKey) + sizeof(guint32) );
+            guint32 * freq = (guint32 *)(pinyin_begin + phrase_length * sizeof(PinyinKey));
+            total_freq += *freq;
+            if ( 0 == pinyin_compare_with_ambiguities(custom, 
+                                                      (PinyinKey *)pinyin_begin,
+                                                      pinyin_keys,
+                                                      phrase_length)){
+                matched += *freq;
+            }
+        }
+        // use preprocessor to avoid zero freq, in gen_pinyin_table.
+        /*
+        if ( 0 == total_freq )
+            return 0.1;
+        */
+        gfloat retval = matched / (gfloat) total_freq;
+        /*
+        if ( 0 == retval )
+            return 0.03;
+        */
+        return retval;
     }
     
     void increase_pinyin_possibility(PinyinCustomSettings & custom,
-				     PinyinKey * pinyin_keys,
-				     gint32 delta);
+                                     PinyinKey * pinyin_keys,
+                                     gint32 delta);
 
     bool get_phrase_string(utf16_t * phrase);
     bool set_phrase_string(guint8 phrase_length, utf16_t * phrase);
     bool get_nth_pronunciation(size_t index, 
-			       /* out */ PinyinKey * pinyin, 
-			       /* out */ guint32 & freq);
+                               /* out */ PinyinKey * pinyin, 
+                               /* out */ guint32 & freq);
     /* Normally don't change the first pronunciation,
      * which decides the token number.
      */
@@ -161,25 +161,25 @@ private:
     MemoryChunk * m_chunk;
 public:
     SubPhraseIndex():m_total_freq(0){
-	m_chunk = NULL;
+        m_chunk = NULL;
     }
 
     ~SubPhraseIndex(){
-	reset();
+        reset();
     }
 
     void reset(){
-	if ( m_chunk ){
-	    delete m_chunk;
-	    m_chunk = NULL;
-	}
+        if ( m_chunk ){
+            delete m_chunk;
+            m_chunk = NULL;
+        }
     }    
     
     /* binary memory chunk load/store method */
     bool load(MemoryChunk * chunk, 
-	      table_offset_t offset, table_offset_t end);
+              table_offset_t offset, table_offset_t end);
     bool store(MemoryChunk * new_chunk, 
-	       table_offset_t offset, table_offset_t & end);
+               table_offset_t offset, table_offset_t & end);
 
     /* switch to logger format to reduce user storage */
     bool diff(SubPhraseIndex * oldone, PhraseIndexLogger * logger);
@@ -212,17 +212,17 @@ private:
     SubPhraseIndex * m_sub_phrase_indices[PHRASE_INDEX_LIBRARY_COUNT];
 public:
     FacadePhraseIndex(){
-	m_total_freq = 0;
-	memset(m_sub_phrase_indices, 0, sizeof(m_sub_phrase_indices));
+        m_total_freq = 0;
+        memset(m_sub_phrase_indices, 0, sizeof(m_sub_phrase_indices));
     }
 
     ~FacadePhraseIndex(){
-	for ( size_t i = 0; i < PHRASE_INDEX_LIBRARY_COUNT; ++i){
-	    if ( m_sub_phrase_indices[i] ){
-		delete m_sub_phrase_indices[i];
-		m_sub_phrase_indices[i] = NULL;
-	    }
-	}
+        for ( size_t i = 0; i < PHRASE_INDEX_LIBRARY_COUNT; ++i){
+            if ( m_sub_phrase_indices[i] ){
+                delete m_sub_phrase_indices[i];
+                m_sub_phrase_indices[i] = NULL;
+            }
+        }
     }
 
     /* load/store single sub phrase index, according to the config files. */
@@ -245,48 +245,48 @@ public:
 
     /* Zero-gram */
     guint32 get_phrase_index_total_freq(){
-	return m_total_freq;
+        return m_total_freq;
     }
 
     int add_unigram_frequency(phrase_token_t token, guint32 delta){
-	guint8 index = PHRASE_INDEX_LIBRARY_INDEX(token);
-	SubPhraseIndex * sub_phrase = m_sub_phrase_indices[index];
-	if ( !sub_phrase )
-	    return ERROR_NO_SUB_PHRASE_INDEX;
-	m_total_freq += delta;
-	return sub_phrase->add_unigram_frequency(token, delta);
+        guint8 index = PHRASE_INDEX_LIBRARY_INDEX(token);
+        SubPhraseIndex * sub_phrase = m_sub_phrase_indices[index];
+        if ( !sub_phrase )
+            return ERROR_NO_SUB_PHRASE_INDEX;
+        m_total_freq += delta;
+        return sub_phrase->add_unigram_frequency(token, delta);
     }
 
     /* get_phrase_item function can't modify the phrase item */
     int get_phrase_item(phrase_token_t token, PhraseItem & item){
-	guint8 index = PHRASE_INDEX_LIBRARY_INDEX(token);
-	SubPhraseIndex * sub_phrase = m_sub_phrase_indices[index];
-	if ( !sub_phrase )
-	    return ERROR_NO_SUB_PHRASE_INDEX;
-	return sub_phrase->get_phrase_item(token, item);
+        guint8 index = PHRASE_INDEX_LIBRARY_INDEX(token);
+        SubPhraseIndex * sub_phrase = m_sub_phrase_indices[index];
+        if ( !sub_phrase )
+            return ERROR_NO_SUB_PHRASE_INDEX;
+        return sub_phrase->get_phrase_item(token, item);
     }
 
     int add_phrase_item(phrase_token_t token, PhraseItem * item){
-	guint8 index = PHRASE_INDEX_LIBRARY_INDEX(token);
-	SubPhraseIndex * & sub_phrase = m_sub_phrase_indices[index];
-	if ( !sub_phrase ){
-	    sub_phrase = new SubPhraseIndex;
-	}   
-	m_total_freq += item->get_unigram_frequency();
-	return sub_phrase->add_phrase_item(token, item);
+        guint8 index = PHRASE_INDEX_LIBRARY_INDEX(token);
+        SubPhraseIndex * & sub_phrase = m_sub_phrase_indices[index];
+        if ( !sub_phrase ){
+            sub_phrase = new SubPhraseIndex;
+        }   
+        m_total_freq += item->get_unigram_frequency();
+        return sub_phrase->add_phrase_item(token, item);
     }
 
     int remove_phrase_item(phrase_token_t token, PhraseItem * & item){
-	guint8 index = PHRASE_INDEX_LIBRARY_INDEX(token);
-	SubPhraseIndex * & sub_phrase = m_sub_phrase_indices[index];
-	if ( !sub_phrase ){
-	    return ERROR_NO_SUB_PHRASE_INDEX;
-	}
-	int result = sub_phrase->remove_phrase_item(token, item);
-	if ( result )
-	    return result;
-	m_total_freq -= item->get_unigram_frequency();
-	return result;
+        guint8 index = PHRASE_INDEX_LIBRARY_INDEX(token);
+        SubPhraseIndex * & sub_phrase = m_sub_phrase_indices[index];
+        if ( !sub_phrase ){
+            return ERROR_NO_SUB_PHRASE_INDEX;
+        }
+        int result = sub_phrase->remove_phrase_item(token, item);
+        if ( result )
+            return result;
+        m_total_freq -= item->get_unigram_frequency();
+        return result;
     }
 
 };
