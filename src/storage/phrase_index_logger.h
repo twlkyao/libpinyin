@@ -59,7 +59,7 @@ protected:
     }
 public:
     PhraseIndexLogger():m_offset(0){
-        m_chunk = NULL;
+        m_chunk = new MemoryChunk;
     }
 
     ~PhraseIndexLogger(){
@@ -87,8 +87,8 @@ public:
     }
 
     /* prolog: has_next_record() returned true. */
-    bool next(LOG_TYPE & log_type, phrase_token_t & token,
-              MemoryChunk * oldone, MemoryChunk * newone){
+    bool next_record(LOG_TYPE & log_type, phrase_token_t & token,
+                     MemoryChunk * oldone, MemoryChunk * newone){
         size_t offset = m_offset;
         m_chunk->get_content(offset, &log_type, sizeof(LOG_TYPE));
         offset += sizeof(LOG_TYPE);
@@ -97,36 +97,33 @@ public:
 
         switch(log_type){
         case LOG_ADD_RECORD:{
-            assert( NULL == oldone);
-            assert( NULL != newone);
+            oldone->set_size(0);
             size_t len = 0;
             m_chunk->get_content(offset, &len, sizeof(size_t));
             offset += sizeof(size_t);
-            newone->set_content(0, m_chunk->begin() + offset, len);
+            newone->set_content(0, ((char *)m_chunk->begin()) + offset, len);
             offset += len;
             break;
         }
         case LOG_REMOVE_RECORD:{
-            assert( NULL != oldone);
-            assert( NULL == newone);
+            newone->set_size(0);
             size_t len = 0;
             m_chunk->get_content(offset, &len, sizeof(size_t));
             offset += sizeof(size_t);
-            oldone->set_content(0, m_chunk->begin() + offset, len);
+            oldone->set_content(0, ((char *)m_chunk->begin()) + offset, len);
             offset += len;
             break;
         }
         case LOG_MODIFY_RECORD:{
-            assert( NULL != oldone);
-            assert( NULL != newone);
             size_t oldlen = 0, newlen = 0;
             m_chunk->get_content(offset, &oldlen, sizeof(size_t));
             offset += sizeof(size_t);
             m_chunk->get_content(offset, &newlen, sizeof(size_t));
             offset += sizeof(size_t);
-            oldone->set_content(0, m_chunk->begin() + offset, oldlen);
+            oldone->set_content(0, ((char *)m_chunk->begin()) + offset,
+                                oldlen);
             offset += oldlen;
-            newone->set_content(0, m_chunk->begin() + offset, newlen);
+            newone->set_content(0, ((char *)m_chunk->begin()) + offset, newlen);
             offset += newlen;
             break;
         }

@@ -67,10 +67,12 @@ public:
 	memset(m_chunk.begin(), 0, m_chunk.size());
     }
 
-    PhraseItem(MemoryChunk chunk){
-	m_chunk = chunk;
-	assert ( m_chunk.size() >= phrase_item_header);
+#if 0
+    PhraseItem(MemoryChunk & chunk){
+        m_chunk.set_content(0, chunk->begin(), chunk->size());
+        assert ( m_chunk.size() >= phrase_item_header);
     }
+#endif
 
     /* functions */
     guint8 get_phrase_length(){
@@ -134,6 +136,17 @@ public:
      */
     void append_pronunciation(PinyinKey * pinyin, guint32 freq);
     void remove_nth_pronunciation(size_t index);
+
+    bool operator == (PhraseItem & rhs){
+        if (m_chunk.size() != rhs.m_chunk.size())
+            return false;
+        return memcmp(m_chunk.begin(), rhs.m_chunk.begin(),
+                      m_chunk.size()) == 0;
+    }
+
+    bool operator != (PhraseItem & rhs){
+        return ! (*this == rhs);
+    }
 };
 
 /*
@@ -168,14 +181,20 @@ public:
     bool store(MemoryChunk * new_chunk, 
 	       table_offset_t offset, table_offset_t & end);
 
+    /* switch to logger format to reduce user storage */
+    bool diff(SubPhraseIndex * oldone, PhraseIndexLogger * logger);
+    bool merge(PhraseIndexLogger * logger);
+
     /* get token range in this sub phrase */
     int get_range(/* out */ PhraseIndexRange & range);
     
     /* Zero-gram */
     guint32 get_phrase_index_total_freq();
     int add_unigram_frequency(phrase_token_t token, guint32 delta);
-    /* get_phrase_item function can't modify the phrase item, 
-     * but can increment the freq of the special pronunciation.
+
+    /* get_phrase_item function can't modify the phrase item size,
+     * but can increment the freq of the special pronunciation,
+     * or change the content without size increasing.
      */
     int get_phrase_item(phrase_token_t token, PhraseItem & item);
     int add_phrase_item(phrase_token_t token, PhraseItem * item);
@@ -183,6 +202,7 @@ public:
      * from m_total_freq
      */
     int remove_phrase_item(phrase_token_t token, /* out */ PhraseItem * & item);
+
 };
 
 class FacadePhraseIndex{
@@ -210,6 +230,12 @@ public:
     bool load(guint8 phrase_index, MemoryChunk * chunk);
     bool store(guint8 phrase_index, MemoryChunk * new_chunk);
     bool unload(guint8 phrase_index);
+
+    /* load/store logger format.
+       the ownership of oldchunk and log is transfered to here. */
+    bool diff(guint8 phrase_index, MemoryChunk * oldchunk,
+              MemoryChunk * newlog);
+    bool merge(guint8 phrase_index, MemoryChunk * log);
 
     /* compat all SubPhraseIndex m_phrase_content memory usage.*/
     bool compat();
@@ -262,6 +288,7 @@ public:
 	m_total_freq -= item->get_unigram_frequency();
 	return result;
     }
+
 };
  
 };

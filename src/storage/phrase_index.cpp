@@ -213,6 +213,32 @@ bool FacadePhraseIndex::unload(guint8 phrase_index){
     return true;
 }
 
+bool FacadePhraseIndex::diff(guint8 phrase_index, MemoryChunk * oldchunk,
+                             MemoryChunk * newlog){
+    SubPhraseIndex * & sub_phrases = m_sub_phrase_indices[phrase_index];
+    if ( !sub_phrases )
+        return false;
+
+    SubPhraseIndex old_sub_phrases;
+    old_sub_phrases.load(oldchunk, 0, oldchunk->size());
+    PhraseIndexLogger logger;
+
+    bool retval = sub_phrases->diff(&old_sub_phrases, &logger);
+    logger.store(newlog);
+    return retval;
+}
+
+bool FacadePhraseIndex::merge(guint8 phrase_index, MemoryChunk * log){
+    SubPhraseIndex * & sub_phrases = m_sub_phrase_indices[phrase_index];
+    if ( !sub_phrases )
+        return false;
+
+    PhraseIndexLogger logger;
+    logger.load(log);
+
+    return sub_phrases->merge(&logger);
+}
+
 bool SubPhraseIndex::load(MemoryChunk * chunk, 
 			  table_offset_t offset, table_offset_t end){
     //save the memory chunk
@@ -268,6 +294,104 @@ bool SubPhraseIndex::store(MemoryChunk * new_chunk,
     offset += sizeof(char);
     new_chunk->set_content(index, &offset, sizeof(table_offset_t));
     return true;
+}
+
+bool SubPhraseIndex::diff(SubPhraseIndex * oldone, PhraseIndexLogger * logger){
+    PhraseIndexRange oldrange, currange, range;
+    oldone->get_range(oldrange); get_range(currange);
+    range.m_range_begin = std_lite::min(oldrange.m_range_begin,
+                                        currange.m_range_begin);
+    range.m_range_end = std_lite::max(oldrange.m_range_end,
+                                     currange.m_range_end);
+    PhraseItem olditem, newitem;
+
+    for (phrase_token_t token = range.m_range_begin;
+         token < range.m_range_end; ++token ){
+        bool oldretval = ERROR_OK == oldone->get_phrase_item(token, olditem);
+        bool newretval = ERROR_OK == get_phrase_item(token, newitem);
+
+        if ( oldretval ){
+            if ( newretval ) { /* compare phrase item. */
+                if ( olditem == newitem )
+                    continue;
+                logger->append_record(LOG_MODIFY_RECORD, token,
+                                      &(olditem.m_chunk), &(newitem.m_chunk));
+            } else { /* remove phrase item. */
+                logger->append_record(LOG_REMOVE_RECORD, token,
+                                      &(olditem.m_chunk), NULL);
+            }
+        } else {
+            if ( newretval ){ /* add phrase item. */
+                logger->append_record(LOG_ADD_RECORD, token,
+                                      NULL, &(newitem.m_chunk));
+            } else { /* both empty. */
+                    /* do nothing. */
+            }
+        }
+    }
+
+    return true;
+}
+
+bool SubPhraseIndex::merge(PhraseIndexLogger * logger){
+    LOG_TYPE log_type; phrase_token_t token;
+    MemoryChunk oldchunk, newchunk;
+    PhraseItem olditem, newitem, item, * tmpitem;
+
+    while(logger->has_next_record()){
+        logger->next_record(log_type, token, &oldchunk, &newchunk);
+
+        switch(log_type){
+        case LOG_ADD_RECORD:{
+            assert( 0 == oldchunk.size() );
+            newitem.m_chunk.set_chunk(newchunk.begin(), newchunk.size(),
+                                      NULL);
+            add_phrase_item(token, &newitem);
+            break;
+        }
+        case LOG_REMOVE_RECORD:{
+            assert( 0 == newchunk.size() );
+            tmpitem = NULL;
+            remove_phrase_item(token, tmpitem);
+
+            olditem.m_chunk.set_chunk(oldchunk.begin(), oldchunk.size(),
+                                   NULL);
+            if (olditem != *tmpitem)
+                return false;
+            delete tmpitem;
+
+            break;
+        }
+        case LOG_MODIFY_RECORD:{
+            get_phrase_item(token, item);
+            olditem.m_chunk.set_chunk(oldchunk.begin(), oldchunk.size(),
+                                      NULL);
+            newitem.m_chunk.set_chunk(newchunk.begin(), newchunk.size(),
+                                      NULL);
+            if (item != olditem)
+                return false;
+
+            if (newchunk.size() > item.m_chunk.size() ){ /* increase size. */
+                tmpitem = NULL;
+                remove_phrase_item(token, tmpitem);
+                assert(olditem == *tmpitem);
+                add_phrase_item(token, &newitem);
+                delete tmpitem;
+            } else { /* in place editing. */
+                /* newchunk.size() <= item.m_chunk.size() */
+                /* Hack here: we assume the behaviour of get_phrase_item
+                 * point to the actual data positon, so changes to item
+                 * will be saved in SubPhraseIndex immediately.
+                 */
+                memmove(item.m_chunk.begin(), newchunk.begin(),
+                        newchunk.size());
+            }
+            break;
+        }
+        default:
+            assert(false);
+        }
+    }
 }
 
 bool FacadePhraseIndex::load_text(guint8 phrase_index, FILE * infile){
