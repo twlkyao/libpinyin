@@ -1,2 +1,9 @@
-CXXFLAGS="-O0 -g3" ./configure --disable-shared --enable-static
-
+mkdir --parents debug \
+&& cd debug \
+&& cmake \
+	-D ENABLE_GETTEXT:BOOL=ON \
+	-DCMAKE_BUILD_TYPE=Debug \
+	-DCMAKE_INSTALL_PREFIX=`pwd`/root \
+	.. \
+&& make \
+&& make install

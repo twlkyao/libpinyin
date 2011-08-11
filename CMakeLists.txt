@@ -29,12 +29,12 @@ set (LIBPINYIN_VERSION_REVISION 99)
 set (LIBPINYIN_BINARY_VERSION 0.3)
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
-	set (version_suffix .Debug)
+    set (version_suffix .Debug)
 endif (CMAKE_BUILD_TYPE MATCHES Debug)
 
 set (
-	LIBPINYIN_VERSION
-	${LIBPINYIN_VERSION_MAJOR}.${LIBPINYIN_VERSION_MINOR}.${LIBPINYIN_VERSION_REVISION}${version_suffix}
+    LIBPINYIN_VERSION
+    ${LIBPINYIN_VERSION_MAJOR}.${LIBPINYIN_VERSION_MINOR}.${LIBPINYIN_VERSION_REVISION}${version_suffix}
 )
 
 ######## Validation
@@ -67,8 +67,8 @@ find_package(BerkeleyDB REQUIRED)
 ######## Windows
 
 if (WIN32)
-	set(CMAKE_SHARED_LIBRARY_PREFIX ${CMAKE_INSTALL_PREFIX})
-	set(CMAKE_STATIC_LIBRARY_PREFIX ${CMAKE_INSTALL_PREFIX})
+    set(CMAKE_SHARED_LIBRARY_PREFIX ${CMAKE_INSTALL_PREFIX})
+    set(CMAKE_STATIC_LIBRARY_PREFIX ${CMAKE_INSTALL_PREFIX})
 endif (WIN32)
 
 ######## Directory
@@ -82,44 +82,60 @@ set (DIR_BIN ${DIR_PREFIX}/bin)
 set (DIR_ETC ${DIR_PREFIX}/etc)
 
 if (DEFINED CMAKE_INSTALL_LIBDIR)
-	set (DIR_LIBRARY ${CMAKE_INSTALL_LIBDIR})
-	set (DIR_LIBRARY_STATIC ${CMAKE_INSTALL_LIBDIR})
+    set (DIR_LIBRARY ${CMAKE_INSTALL_LIBDIR})
+    set (DIR_LIBRARY_STATIC ${CMAKE_INSTALL_LIBDIR})
 endif (DEFINED CMAKE_INSTALL_LIBDIR)
 
 if (DEFINED SHARE_INSTALL_PREFIX)
-	set (DIR_SHARE ${SHARE_INSTALL_PREFIX})
+    set (DIR_SHARE ${SHARE_INSTALL_PREFIX})
 endif (DEFINED SHARE_INSTALL_PREFIX)
 
 if (DEFINED INCLUDE_INSTALL_DIR)
-	set (DIR_INCLUDE ${INCLUDE_INSTALL_DIR})
+    set (DIR_INCLUDE ${INCLUDE_INSTALL_DIR})
 endif (DEFINED INCLUDE_INSTALL_DIR)
 
 if (DEFINED SYSCONF_INSTALL_DIR)
-	set (DIR_ETC ${SYSCONF_INSTALL_DIR})
+    set (DIR_ETC ${SYSCONF_INSTALL_DIR})
 endif (DEFINED SYSCONF_INSTALL_DIR)
 
-set (DIR_SHARE_LIBPINYIN ${DIR_SHARE}/LIBPINYIN)
-set (DIR_SHARE_LOCALE ${DIR_SHARE}/locale)
+set (DIR_SHARE_LIBPINYIN ${DIR_SHARE}/libpinyin)
+set (DIR_INCLUDE_LIBPINYIN ${DIR_INCLUDE}/libpinyin-${LIBPINYIN_BINARY_VERSION})
 
 ######## Configuration
 
 configure_file(
-	libpinyin.pc.in
-	libpinyin.pc
-	@ONLY
+    libpinyin.pc.in
+    libpinyin.pc
+    @ONLY
 )
 
 install(
-	FILES
-		${CMAKE_BINARY_DIR}/libpinyin.pc
-	DESTINATION
-		${DIR_LIBRARY}/pkgconfig
+    FILES
+        ${CMAKE_BINARY_DIR}/libpinyin.pc
+    DESTINATION
+        ${DIR_LIBRARY}/pkgconfig
+)
+
+######## Definition
+
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions(
+        -O0
+        -g3
+    )
+endif (CMAKE_BUILD_TYPE MATCHES Debug)
+
+include_directories(
+    ${GLIB2_INCLUDE_DIR}
+    ${PROJECT_SOURCE_DIR}/src
+    ${PROJECT_SOURCE_DIR}/src/include
+    ${PROJECT_SOURCE_DIR}/src/storage
+    ${PROJECT_SOURCE_DIR}/src/lookup
 )
 
 ######## Subdirectories
 
-#add_subdirectory(data)
-#add_subdirectory(src)
-#add_subdirectory(tests)
-#add_subdirectory(utils)
-
+add_subdirectory(data)
+add_subdirectory(src)
+add_subdirectory(tests)
+add_subdirectory(utils)
